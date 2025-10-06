@@ -12,3 +12,6 @@ wheels/
 
 # System dependent File Logs
 logs/
+
+# My files and folders
+server/data/

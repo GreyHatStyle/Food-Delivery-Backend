@@ -5,7 +5,7 @@ description = "The backend of Food Delivery Web Application"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "django[bcrypt]>=5.2.6",
+    "django[argon2,bcrypt]>=5.2.6",
     "django-cors-headers>=4.9.0",
     "django-filter>=25.1",
     "django-phonenumber-field[phonenumbers]>=8.1.0",

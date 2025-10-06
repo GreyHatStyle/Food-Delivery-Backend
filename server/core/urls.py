@@ -23,6 +23,9 @@ from drf_spectacular.views import SpectacularAPIView
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("account/", include("account.urls")),
+    path("restaurants/", include("restaurants.urls")),
+    
+    
     # Scalar
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("docs/", scalar_views.scalar_viewer, name="scalar_api_docs"),
