@@ -1,10 +1,11 @@
 from django.contrib.auth import authenticate
 from rest_framework import response, status, views
 from rest_framework_simplejwt.tokens import RefreshToken
+from utils import api_exception_handler
 
 from ..docs import login_schema_for_docs
 from ..serializers import LoginValidation, UserSerializer
-from ._base import api_exception_handler, logger
+from ._base import logger
 
 
 class LoginAPI(views.APIView):

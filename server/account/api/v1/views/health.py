@@ -1,8 +1,9 @@
 # Create your views here.
 from rest_framework import permissions, response, status, views
+from utils import api_exception_handler
 
 from ..docs import health_schema
-from ._base import api_exception_handler, logger
+from ._base import logger
 
 
 class HealthAPI(views.APIView):

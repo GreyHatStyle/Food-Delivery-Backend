@@ -5,6 +5,7 @@ exclude =
     .venv,
     __init__.py,
     migrations,
+    commands,
 
 filename = *.py
 accept-encodings = utf-8

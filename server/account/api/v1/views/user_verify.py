@@ -1,8 +1,9 @@
 from rest_framework import response, status, views
 from rest_framework.permissions import IsAuthenticated
+from utils import api_exception_handler
 
 from ..docs import user_verify_schema
-from ._base import api_exception_handler, logger
+from ._base import logger
 
 
 class UserVerifyAPI(views.APIView):

@@ -2,8 +2,8 @@
 createsuperuser:
 	uv run server/manage.py createsuperuser
 
-.PHONY: makemigrations
-makemigrations:
+.PHONY: migrations
+migrations:
 	uv run server/manage.py makemigrations
 
 .PHONY: migrate
@@ -22,15 +22,9 @@ update:
 	uv run server/manage.py migrate
 
 
-.PHONY: g-add
-g-add:
-	isort .
-	black .
-	git add .
-
 # I used these "@" to hide them in console
-.PHONY: check-project
-check-project:
+.PHONY: check
+check:
 	@echo "\033[36mRunning Black to format python code...\033[0m"
 	@black .
 	@echo "\033[32mNow running flake8...\033[0m"

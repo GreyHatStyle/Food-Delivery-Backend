@@ -1,4 +1,5 @@
 import os
+
 import mongoengine
 
 DATABASES = {
@@ -16,5 +17,7 @@ DATABASES = {
 mongoengine.connect(
     db=os.environ.get("MONGO_DB_NAME"),
     host=os.environ.get("MONGO_DB_HOST"),
-    connect=os.environ.get("MONGO_CONNECT", "") == "True", # Just preventing it to connect on start server (so that I can perform management commands without getting this function's messages)
+    connect=os.environ.get("MONGO_CONNECT", "") == "True",
+    # Just preventing it to connect on start server
+    # (so that I can perform management commands without getting this function's messages)
 )
