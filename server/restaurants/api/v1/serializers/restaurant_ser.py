@@ -15,6 +15,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
             "id",
             "r_name",
             "rating",
+            "avg_cost",
             "rating_count_str",
             "cuisine",
             "menu_image",
