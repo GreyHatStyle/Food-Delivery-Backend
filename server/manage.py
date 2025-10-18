@@ -2,6 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from enums import TerminalStyleEnum
 
 
 def main():
@@ -9,6 +10,10 @@ def main():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
     try:
         from django.core.management import execute_from_command_line
+
+        sys.stdout.write(
+            f"{TerminalStyleEnum.GREEN}Starting Server in {os.environ.get("ENVIRONMENT_MODE", "").upper()} Mode{TerminalStyleEnum.RESET} \n"
+        )
     except ImportError as exc:
         raise ImportError(
             "Couldn't import Django. Are you sure it's installed and "

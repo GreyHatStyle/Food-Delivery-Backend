@@ -1,78 +1,20 @@
-"""
-IN PRODUCTION MODE THIS LOGGING IS GIVING SOME ISSUES KINDLY DEAL WITH THIS
-"""
-
+import sentry_sdk
 import os
 
-from django.conf import settings
-from dotenv import load_dotenv
-from utils import LogSetup
-
-load_dotenv()
-
-logger_util = LogSetup(settings.APPS_TO_LOG)
-
-# Better stack (logtail)
-source_token = os.environ.get("BETTERSTACK_SOURCE_TOKEN", "")
-host = f'https://{os.environ.get("BETTERSTACK_INGESTING_HOST", "")}'
-
-print(source_token)
-print("HOST: ", host)
-
-app_handlers = {}
-app_loggers = {}
-
-if len(app_handlers) == 0 and len(app_loggers) == 0:
-    for app in settings.APPS_TO_LOG:
-        app_handlers.update(
-            logger_util.create_logtail_app_handlers(app, source_token, host)
-        )
-        app_loggers.update(logger_util.create_app_logger(app))
-
-# Logs
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        # Main BetterStack handler (fallback)
-        "logtail": {
-            "class": "logtail.LogtailHandler",
-            "source_token": source_token,
-            "host": host,
-            "level": "INFO",
-            "formatter": "verbose",
-        },
-        **app_handlers,
-    },
-    "filters": {
-        "normal_level_filter": {
-            "()": "django.utils.log.CallbackFilter",
-            "callback": lambda record: record.levelno
-            < 40,  # Less than ERROR level (40)
-        },
-    },
-    "loggers": {
-        # Root logger for other apps
-        "": {
-            "level": os.environ.get("DJANGO_LOG_LEVEL", "INFO"),
-            "handlers": ["logtail"],
-        },
-        # Django internal loggers
-        "django": {
-            "level": "INFO",
-            "handlers": ["logtail"],
-            "propagate": False,
-        },
-        **app_loggers,
-    },
-    "formatters": {
-        "simple": {
-            "format": "{levelname} [{asctime}]: {message}",
-            "style": "{",
-        },
-        "verbose": {
-            "format": "{levelname}[{asctime}] - ({name} -> {module}.py line={lineno:d}): {message}",
-            "style": "{",
-        },
-    },
-}
+sentry_sdk.init(
+    dsn=os.environ.get("SENTRY_DSN"),
+    # Add data like request headers and IP for users,
+    # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+    send_default_pii=True,
+    # Enable sending logs to Sentry
+    enable_logs=True,
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for tracing.
+    traces_sample_rate=1.0,
+    # Set profile_session_sample_rate to 1.0 to profile 100%
+    # of profile sessions.
+    profile_session_sample_rate=1.0,
+    # Set profile_lifecycle to "trace" to automatically
+    # run the profiler on when there is an active transaction
+    profile_lifecycle="trace",
+)

@@ -18,4 +18,5 @@ include(
     "drf.py",
     "simple_jwt.py",
     "scalar.py",
+    "redis.py",
 )

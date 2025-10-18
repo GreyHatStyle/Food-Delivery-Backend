@@ -16,7 +16,7 @@ class HealthAPI(views.APIView):
     def get(self, request):
 
         self.logger.info("This api ran fine!!!")
-        self.logger.error("Although i want to send error also bruh")
+        # self.logger.error("This is debug from health api booooom")
 
         return response.Response(
             {

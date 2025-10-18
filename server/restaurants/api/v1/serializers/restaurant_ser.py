@@ -11,7 +11,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Restaurant
-        fields = (
+        fields = [
             "id",
             "r_name",
             "rating",
@@ -20,7 +20,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
             "cuisine",
             "menu_image",
             "r_image_url",
-        )
+        ]
 
     def get_menu_image(self, restaurant: Restaurant):
         """
@@ -40,7 +40,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
                         "$match": {
                             "categories.menu_items.image_url": {
                                 "$exists": True,
-                                "$ne": "",
+                                "$ne": "no_url_image",
                             },
                         }
                     },

@@ -15,4 +15,5 @@ REST_FRAMEWORK = {
         "user": "1000/day",
         "login_scope": "14/day",
     },
+    "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
 }
