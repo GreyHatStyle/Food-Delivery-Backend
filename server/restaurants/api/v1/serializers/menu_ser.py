@@ -1,15 +1,13 @@
 from ..serializers import RestaurantSerializer
 from rest_framework.serializers import SerializerMethodField
 from restaurants.models import Menu, Restaurant
-from utils import SysPrint
+from utils import print_red
 
 
 class MenuSerializer(RestaurantSerializer):
 
     menu_data = SerializerMethodField()
     category = SerializerMethodField()
-
-    sys_p = SysPrint()
 
     def __init__(self, *args, **kwargs):
         self.category = kwargs.pop("category", None)
@@ -51,7 +49,7 @@ class MenuSerializer(RestaurantSerializer):
             return categories_pipeline
 
         except Exception as e:
-            self.sys_p.print_error(f"Error: {e}")
+            print_red(f"Error: {e}")
             return {}
 
     def get_category(self, restaurant: Restaurant):
@@ -106,4 +104,4 @@ class MenuSerializer(RestaurantSerializer):
             return menu_items
 
         except Exception as e:
-            self.sys_p.print_error(f"Exception: {e}")
+            print_red(f"Exception: {e}")

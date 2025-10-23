@@ -70,3 +70,6 @@ class RestaurantSerializer(serializers.ModelSerializer):
             print(e)
 
             return ""
+        
+        
+    

@@ -12,7 +12,7 @@ def main():
         from django.core.management import execute_from_command_line
 
         sys.stdout.write(
-            f"{TerminalStyleEnum.GREEN}Starting Server in {os.environ.get("ENVIRONMENT_MODE", "").upper()} Mode{TerminalStyleEnum.RESET} \n"
+            f"{TerminalStyleEnum.BOLD}{TerminalStyleEnum.BLUE}Starting Server in {os.environ.get("ENVIRONMENT_MODE", "").upper()} Mode{TerminalStyleEnum.RESET} \n"
         )
     except ImportError as exc:
         raise ImportError(
