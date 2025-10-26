@@ -48,7 +48,7 @@ class GetAllRestaurants(generics.ListAPIView):
 
     # Took help from: https://www.cdrf.co/3.16/rest_framework.generics/ListAPIView.html
     @api_exception_handler
-    # @method_decorator(cache_page(60 * 5, key_prefix="restaurants_list"))
+    @method_decorator(cache_page(60 * 15, key_prefix="restaurants_list"))
     def list(self, request, *args, **kwargs):
         """
         Did this to add my response attributes also in future if needed.
