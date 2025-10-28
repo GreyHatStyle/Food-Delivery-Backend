@@ -1,6 +1,6 @@
 from django.urls import path
-
 from . import views
+from rest_framework.routers import DefaultRouter
 
 urlpatterns = [
     path("restaurants/", views.GetAllRestaurants().as_view(), name="restaurants"),
@@ -15,4 +15,11 @@ urlpatterns = [
         name="restaurants-id-category",
     ),
     path("cities/", views.GetCitiesNames().as_view(), name="unique-cities"),
+    
+    path("cart/", views.CartAPI.as_view(), name="cart-detail"),
 ]
+
+router = DefaultRouter()
+router.register('cart-items', viewset=views.CartItemAPI)
+
+urlpatterns += router.urls
