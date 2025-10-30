@@ -19,12 +19,24 @@ from django.contrib import admin
 from django.urls import include, path
 from django_scalar import views as scalar_views
 from drf_spectacular.views import SpectacularAPIView
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    
     path("account/", include("account.urls")),
     path("restaurants/", include("restaurants.urls")),
     # Scalar
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("docs/", scalar_views.scalar_viewer, name="scalar_api_docs"),
+    
 ]
+
+# For Now not giving admin access to production (I am not using it right now so for safety concerns)
+if os.environ.get("ENVIRONMENT_MODE") == "dev":
+    urlpatterns += [
+        path("admin/", admin.site.urls),
+        path('silk/', include('silk.urls', namespace='silk')),
+    ]

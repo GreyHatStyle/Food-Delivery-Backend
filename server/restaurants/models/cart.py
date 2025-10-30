@@ -29,8 +29,9 @@ class Cart(models.Model):
     @property
     def total_price(self):
         result = self.c_items.aggregate(
-            total_price=models.Sum("price"),
+            total_price=models.Sum(models.F("price") * models.F("quantity")),
         )
+        
         return result["total_price"] or 0
     
     class Meta:

@@ -1,3 +1,6 @@
+from core.settings.base import INSTALLED_APPS, MIDDLEWARE
+
+
 DEBUG = True
 
 ALLOWED_HOSTS = [
@@ -7,3 +10,11 @@ ALLOWED_HOSTS = [
 ]
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://192.168.208.139:5173"]
+
+INSTALLED_APPS += [
+    'silk',
+]
+
+MIDDLEWARE += [
+    'silk.middleware.SilkyMiddleware',
+]
