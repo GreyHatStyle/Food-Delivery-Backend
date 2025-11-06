@@ -1,36 +1,28 @@
-from rest_framework import generics, permissions, viewsets, response, status
+from rest_framework import views, permissions, viewsets, response, status
 from restaurants.models import Cart, CartItems
 from ..serializers import CartSerializer, CartItemSerializer
 from utils import print_green, api_exception_handler
-# from django.utils.decorators import method_decorator
-# from django.views.decorators.cache import cache_page
-# from django.views.decorators.vary import vary_on_headers
 
 
-class CartAPI(generics.RetrieveAPIView):
+class CartAPI(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CartSerializer
     pagination_class = None
     # queryset = Cart.objects.prefetch_related("c_items")
     
-    def get_object(self):
-        """
-        Basically if User's cart exists, then show the items, otherwise make one to store items afterwards
-        """
-        try:
-            cart = Cart.objects.prefetch_related("c_items").get(user=self.request.user)
-            return cart
+    def get(self, request, restaurant_id):
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        serializer = CartSerializer(
+            cart,
+            context = {
+                "restaurant_id": restaurant_id,
+            }
+        )
         
-        except Cart.DoesNotExist:
-            return Cart.objects.create(user=self.request.user)
         
-    @api_exception_handler
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
         return response.Response({
             "status": "success",
-            "results": serializer.data,
+            "results": serializer.data
         })
         
 

@@ -26,20 +26,15 @@ class Cart(models.Model):
     def total_items(self):
         return self.c_items.count()
     
-    @property
-    def total_price(self):
-        result = self.c_items.aggregate(
-            total_price=models.Sum(models.F("price") * models.F("quantity")),
-        )
-        
-        return result["total_price"] or 0
-    
     class Meta:
         db_table = "Cart"
 
 
-# TODO: setup a signal to delete this item, if item is deleted from 'MenuItems' in mongoDB
+
 class CartItems(models.Model):
+    """
+    With time I felt, if a restaurant decided to increase the rate of an item or remove it, while the person had that item in cart with previous cheaper rate, it may cause conflicts while ordering, hence storing only 'item_uuid' in cart is safer.
+    """
     cart = models.ForeignKey(
         Cart, 
         on_delete=models.CASCADE, 
@@ -47,15 +42,12 @@ class CartItems(models.Model):
         db_index=True,    
     )
     
-    name = models.CharField(max_length=100)
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    image_url = models.TextField(null=True, blank=True)
+    item_uuid = models.CharField(max_length=40)
     category = models.CharField(max_length=50)
     quantity = models.IntegerField(default=1)
-    veg = models.BooleanField(default=False)
     
     def __str__(self) -> str:
-        return f"{self.quantity} x {self.name} in {self.cart.user.username}'s cart"
+        return f"{self.quantity} x {self.item_uuid} in {self.cart.user.username}'s cart"
     
     class Meta:
         db_table = "CartItems"
