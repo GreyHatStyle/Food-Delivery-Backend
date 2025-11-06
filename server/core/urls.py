@@ -21,6 +21,8 @@ from django_scalar import views as scalar_views
 from drf_spectacular.views import SpectacularAPIView
 import os
 from dotenv import load_dotenv
+from rest_framework_simplejwt.views import TokenRefreshView
+
 
 load_dotenv()
 

@@ -45,7 +45,7 @@ class Command(BaseCommand):
         json_l_path = os.path.join(
             path_till_server,
             "data",
-            "menu-items-data-600-rest-global-uuid-digitalOcean.jsonl",
+            "menu-data-1759919994-uuid-digitalOcean.jsonl",
         )
 
         BULK_INSERT_QUERIES: list[Restaurant] = []

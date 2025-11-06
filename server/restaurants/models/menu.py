@@ -8,6 +8,7 @@ from mongoengine import (
     StringField,
     URLField,
 )
+from uuid import uuid4
 
 FOOD_TYPE_CHOICES = (("V", "Veg"), ("NV", "Non-Veg"), ("E", "Contains Egg"))
 
@@ -16,7 +17,7 @@ class MenuItem(EmbeddedDocument):
     """
     Represent a single Item in menu, like: Butter Paneer masala
     """
-
+    item_uuid = StringField(default=uuid4())
     name = StringField(required=True)
     price = DecimalField(precision=2, required=True)
     food_type = StringField(required=True, choices=FOOD_TYPE_CHOICES)

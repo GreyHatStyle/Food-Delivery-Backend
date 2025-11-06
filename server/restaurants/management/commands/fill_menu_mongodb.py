@@ -58,6 +58,7 @@ class Command(BaseCommand):
                                         )
 
                                         mi = MenuItem(
+                                            item_uuid=data.get("item_uuid"),
                                             name=menu_name,
                                             price=float(data.get("price", 0.0)),
                                             food_type=food_type,
