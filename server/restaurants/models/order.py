@@ -25,6 +25,13 @@ class Order(models.Model):
         blank=True, 
         related_name="order"
     )
+    restaurant = models.ForeignKey(
+        "restaurants.Restaurant", 
+        on_delete=models.SET_NULL, 
+        related_name='orders',
+        null=True,
+        blank=True,    
+    )
     
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(

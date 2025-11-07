@@ -1,8 +1,10 @@
+from __future__ import annotations
 import uuid
-
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
-
+from typing import TYPE_CHECKING
+from .cart import Cart
+from .order import Order
 
 class Restaurant(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -23,6 +25,11 @@ class Restaurant(models.Model):
     address = models.TextField(blank=True, null=True)
     lic_no = models.CharField(max_length=30, blank=True, null=True)
     r_image_url = models.TextField(blank=True, null=True)
+    
+    if TYPE_CHECKING:
+        carts: models.Manager[Cart]
+        orders: models.Manager[Order]
+    
 
     def save(self, *args, **kwargs):
         """

@@ -39,7 +39,7 @@ class Menu(Document):
     The final menu collection
     """
 
-    # TODO: for some reason UUID field was not working... so providing string field for now (to store UUID4)
+    # for some reason UUID field was not working... so providing string field for now (to store UUID4)
     restaurant_id = StringField(required=True, unique=True)
     categories = ListField(EmbeddedDocumentField(MenuCategory))
 

@@ -16,7 +16,7 @@ urlpatterns = [
     ),
     path("cities/", views.GetCitiesNames().as_view(), name="unique-cities"),
     
-    path("cart/<uuid:restaurant_id>/", views.CartAPI.as_view(), name="cart-detail"),
+    path("cart/", views.CartAPI.as_view(), name="cart-detail"),
 ]
 
 router = DefaultRouter()

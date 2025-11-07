@@ -14,7 +14,6 @@ CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://192.168.208.139:5173"]
 INSTALLED_APPS += [
     'silk',
 ]
+SILKY_PYTHON_PROFILER = True
 
-MIDDLEWARE += [
-    'silk.middleware.SilkyMiddleware',
-]
+MIDDLEWARE.insert(0, 'silk.middleware.SilkyMiddleware')

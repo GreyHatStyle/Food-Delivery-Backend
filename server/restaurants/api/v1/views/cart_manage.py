@@ -1,7 +1,8 @@
 from rest_framework import views, permissions, viewsets, response, status
-from restaurants.models import Cart, CartItems
+from restaurants.models import Cart, CartItems, Restaurant
 from ..serializers import CartSerializer, CartItemSerializer
 from utils import print_green, api_exception_handler
+from uuid import UUID
 
 
 class CartAPI(views.APIView):
@@ -10,20 +11,20 @@ class CartAPI(views.APIView):
     pagination_class = None
     # queryset = Cart.objects.prefetch_related("c_items")
     
-    def get(self, request, restaurant_id):
-        cart, created = Cart.objects.get_or_create(user=request.user)
+    def get(self, request):
+        cart= Cart.objects.get(user=request.user)
         serializer = CartSerializer(
             cart,
-            context = {
-                "restaurant_id": restaurant_id,
-            }
+            # context = {
+            #     "restaurant_id": restaurant_id,
+            # }
         )
         
         
         return response.Response({
             "status": "success",
-            "results": serializer.data
-        })
+            "results": serializer.data,
+        }, status=status.HTTP_200_OK)
         
 
         
@@ -65,11 +66,32 @@ class CartItemAPI(viewsets.ModelViewSet):
         Also frontend won't need to send user's cart id now.
         """
         user = request.user
-        cart_id = Cart.objects.only('id').get(user=user).pk
+        restaurant_id = request.data.get("restaurant_id")
         
-        print_green("Request data")
+        restaurant = Restaurant.objects.only('id').get(id=UUID(restaurant_id))
         
-        request.data['cart'] = cart_id
+        try:
+            cart = Cart.objects.only('id', 'restaurant_id').get(user=user)
+            
+            # User is ordering from different restaurant, delete all cart items
+            if cart.restaurant != restaurant:
+                CartItems.objects.filter(cart=cart).delete()
+                cart.restaurant = restaurant
+                cart.save()
+                
+        except Cart.DoesNotExist:
+            
+            # So user is adding first time in cart
+            cart = Cart.objects.create(
+                user=user,
+                restaurant=restaurant,    
+            )
+            
+        
+        
+        # I know I am gonna confuse in it in future, so even though I am sending cart object's primary key
+        # Here, it in serializer's create() method's 'validated_data', it will have cart's object only
+        request.data['cart'] = cart.pk
         print(request.data)
         
         return super().create(request, *args, **kwargs)

@@ -7,6 +7,8 @@ from django.db.models import Manager
 
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
+    restaurant = models.ForeignKey("restaurants.Restaurant", on_delete=models.CASCADE, related_name='carts')
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
