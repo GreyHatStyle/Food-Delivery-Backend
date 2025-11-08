@@ -12,7 +12,7 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_THROTTLE_RATES": {
         "anon": "500/day",
-        "user": "1000/day",
+        "user": "1500/day",
         "login_scope": "14/day",
     },
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),

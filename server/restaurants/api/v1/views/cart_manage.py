@@ -11,20 +11,29 @@ class CartAPI(views.APIView):
     pagination_class = None
     # queryset = Cart.objects.prefetch_related("c_items")
     
+    @api_exception_handler
     def get(self, request):
-        cart= Cart.objects.get(user=request.user)
-        serializer = CartSerializer(
-            cart,
-            # context = {
-            #     "restaurant_id": restaurant_id,
-            # }
-        )
         
-        
-        return response.Response({
-            "status": "success",
-            "results": serializer.data,
-        }, status=status.HTTP_200_OK)
+        try:
+            cart= Cart.objects.get(user=request.user)
+            serializer = CartSerializer(
+                cart,
+                # context = {
+                #     "restaurant_id": restaurant_id,
+                # }
+            )
+            
+            
+            return response.Response({
+                "status": "success",
+                "results": serializer.data,
+            }, status=status.HTTP_200_OK)
+            
+        except Cart.DoesNotExist:
+            return response.Response({
+                "status": "error",
+                "message": "Cart of this user's name doesn't exists!!",
+            }, status=status.HTTP_400_BAD_REQUEST)
         
 
         

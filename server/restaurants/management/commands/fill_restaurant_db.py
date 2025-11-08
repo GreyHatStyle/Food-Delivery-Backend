@@ -6,6 +6,22 @@ from django.core.management.base import BaseCommand
 from django.db import connection
 from restaurants.models import Restaurant
 
+def get_rating_count_int(rating_count_str: str) -> int:
+    """
+    Will get only number from rating count string, to deal with those "1K+ rating" vs "100+ rating" problem
+    """
+
+    if "K" in rating_count_str:
+        rating_count_str = rating_count_str.replace("K", "000")
+
+    rating_count = ""
+
+    for char in rating_count_str:
+        if char.isdigit():
+            rating_count += char
+
+    return int(rating_count) if rating_count != "" else 0
+    
 
 class Command(BaseCommand):
 
@@ -72,6 +88,7 @@ class Command(BaseCommand):
                         avg_cost=self.avg_cost_conversion(restaurant_data.get("cost")),
                         address=restaurant_data.get("address"),
                         lic_no=restaurant_data.get("lic_no"),
+                        rating_count_int = get_rating_count_int(restaurant_data.get("rating_count"))
                     )
 
                     BULK_INSERT_QUERIES.append(rest_query)
