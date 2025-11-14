@@ -1,6 +1,7 @@
 import os
 
 import mongoengine
+import logging
 
 DATABASES = {
     "default": {
@@ -12,6 +13,10 @@ DATABASES = {
         "PORT": os.environ.get("DB_PORT"),
     }
 }
+
+# Disable mongoengine logging
+logging.getLogger('mongoengine').setLevel(logging.WARNING)
+logging.getLogger('pymongo').setLevel(logging.WARNING)
 
 
 mongoengine.connect(

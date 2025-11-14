@@ -1,7 +1,12 @@
 from rest_framework import serializers
 from restaurants.models import Cart, Menu
 from utils import print_green
+from typing import TypedDict, List
 
+class CartItemType(TypedDict):
+    item_uuid: str
+    item_id: int
+    quantity: int
 
 class CartSerializer(serializers.ModelSerializer):
     c_items = serializers.SerializerMethodField()
@@ -46,13 +51,17 @@ class CartSerializer(serializers.ModelSerializer):
         print_green(f"context: {self.context}")
         
         item_uuids = []
-        quantities = []
-        item_ids = []
+        
+        cart_item_lst: List[CartItemType] = []
         
         for item in cart_items:
             item_uuids.append(item.item_uuid)
-            item_ids.append(item.pk)
-            quantities.append(item.quantity)
+            
+            cart_item_lst.append({
+                "item_id": item.pk,
+                "item_uuid": item.item_uuid,
+                "quantity": item.quantity,
+            })
         
         
         pipe_line = [
@@ -83,10 +92,19 @@ class CartSerializer(serializers.ModelSerializer):
         result = list(items)
         
         total_price = 0
-        for cart_item, quantity, pg_id in zip(result, quantities, item_ids):
-            cart_item['quantity'] = quantity
-            cart_item['cart_item_id'] = pg_id
-            total_price += (cart_item['item_data']['price'] * quantity)
+        
+        
+        # FIX: The returned items from mongoDB were not on same order as stored in lists earlier, hence data's id and quantity
+        # were mis matching (DB: item_uuid: "fdb.." has 2 quantity, API: item_uuid: "fdb.." has 1 quantity),
+        # Fixed it to save and find correct item's data, IN FUTURE NEED TO OPTIMIZE THIS SEARCH PROCESS
+        for cart_item in result:
+            for item in cart_item_lst:
+                if item["item_uuid"] == cart_item['item_data']['item_uuid']:
+                    cart_item['quantity'] = item['quantity']
+                    cart_item['cart_item_id'] = item["item_id"]
+                    total_price += (cart_item['item_data']['price'] * item["quantity"])
+                    break
+                    
         
         
         self._cart_data_cache = (result, total_price)
