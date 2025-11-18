@@ -27,6 +27,7 @@ class CartAPI(views.APIView):
             return response.Response({
                 "status": "success",
                 "results": serializer.data,
+                
             }, status=status.HTTP_200_OK)
             
         except Cart.DoesNotExist:

@@ -12,10 +12,14 @@ class CartSerializer(serializers.ModelSerializer):
     c_items = serializers.SerializerMethodField()
     total_price = serializers.SerializerMethodField(default=0)
     restaurant_name = serializers.SerializerMethodField()
+    service_charges = serializers.SerializerMethodField()
+    to_pay = serializers.SerializerMethodField()
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._cart_data_cache = None
+        # self.total_item_stored_price = None
+        self.price_to_pay = 0
     
     class Meta:
         model = Cart
@@ -28,6 +32,8 @@ class CartSerializer(serializers.ModelSerializer):
             'total_price',
             'c_items',
             'restaurant_name',
+            'service_charges',
+            'to_pay',
         )
         
         read_only_fields = ("user", "total_items", )
@@ -117,8 +123,31 @@ class CartSerializer(serializers.ModelSerializer):
     
     def get_total_price(self, obj:Cart):
         _, total_price = self._get_menu_item_and_cache_it(obj)
+        self.price_to_pay += total_price
         return total_price
         
     def get_restaurant_name(self, obj:Cart):
         return obj.restaurant.r_name
         
+    def get_service_charges(self, obj:Cart):
+        """
+        Can Add services charges dynamically in future from here
+        """
+        services = {
+            "delivery_fee": 27.00,
+            "gst_fee": 25.99,
+        }
+        
+        for key, price in services.items():
+            self.price_to_pay += price
+        
+        return {
+            "delivery_fee": 27.00,
+            "gst_fee": 25.99,
+        }
+        
+    def get_to_pay(self, obj: Cart):
+        if self.price_to_pay == 0:
+            raise ValueError("Get to pay not set yet")
+        
+        return self.price_to_pay
