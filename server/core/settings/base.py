@@ -33,7 +33,7 @@ INSTALLED_APPS = [
 ]
 
 # My Defined Project apps
-INSTALLED_APPS += ["account", "restaurants"]
+INSTALLED_APPS += ["account", "restaurants", "payment"]
 
 # Python Libraries Used
 INSTALLED_APPS += [
@@ -47,7 +47,7 @@ INSTALLED_APPS += [
 ]
 
 
-APPS_TO_LOG = ["core", "account", "restaurants"]
+APPS_TO_LOG = ["core", "account", "restaurants", "payment"]
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",

@@ -35,6 +35,30 @@ class CartAPI(views.APIView):
                 "status": "error",
                 "message": "Cart of this user's name doesn't exists!!",
             }, status=status.HTTP_400_BAD_REQUEST)
+            
+         
+    @api_exception_handler
+    def delete(self, request):
+        """
+        Clear Cart API
+        """
+        try:
+            cart= Cart.objects.get(user=request.user)
+            cart_id = cart.pk
+            cart_items = CartItems.objects.filter(cart_id=cart_id).prefetch_related()
+            cart_items.delete()
+           
+            return response.Response({
+                "status": "success",
+                "message": f"Cart with {cart_id} of user {request.user.username} has been deleted",
+                
+            }, status=status.HTTP_204_NO_CONTENT)
+            
+        except Cart.DoesNotExist:
+            return response.Response({
+                "status": "error",
+                "message": "Cart of this user's name doesn't exists!!",
+            }, status=status.HTTP_400_BAD_REQUEST)
         
 
         

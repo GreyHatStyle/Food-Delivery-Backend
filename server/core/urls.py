@@ -30,6 +30,7 @@ urlpatterns = [
     
     path("account/", include("account.urls")),
     path("restaurants/", include("restaurants.urls")),
+    path("payment/", include("payment.urls")),
     # Scalar
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("docs/", scalar_views.scalar_viewer, name="scalar_api_docs"),
