@@ -8,6 +8,7 @@ from account.models import UserAddress
 
 class CreateOrderFromCartAPI(views.APIView):
     """
+    (APIView)
     Uses, user's cart to create order and order's item, ***queries***:
     - First user's data for id.
     - User's address for saving it.

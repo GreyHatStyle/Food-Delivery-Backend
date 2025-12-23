@@ -141,10 +141,7 @@ class CartSerializer(serializers.ModelSerializer):
         for key, price in services.items():
             self.price_to_pay += price
         
-        return {
-            "delivery_fee": 27.00,
-            "gst_fee": 25.99,
-        }
+        return services
         
     def get_to_pay(self, obj: Cart):
         if self.price_to_pay == 0:
