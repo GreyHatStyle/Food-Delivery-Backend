@@ -3,6 +3,8 @@ from rest_framework import permissions, pagination
 from ..serializer import OrderSerializer
 from restaurants.models import Order
 
+from ..docs import get_all_user_orders_schema
+
 class GetUserOrdersAPI(ListAPIView):
     """
     (ListAPIView)
@@ -14,4 +16,8 @@ class GetUserOrdersAPI(ListAPIView):
     
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user).order_by('-created_at')
+    
+    @get_all_user_orders_schema
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
         

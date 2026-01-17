@@ -9,7 +9,7 @@ from rest_framework import serializers
 user_verify_schema = extend_schema(
     summary="User Verify",
     description="To check whether the server is working or not",
-    request=inline_serializer(name="HealthCheck", fields={}),
+    request=inline_serializer(name="UserVerify", fields={}),
     responses={
         200: OpenApiResponse(
             response=inline_serializer(
@@ -69,5 +69,5 @@ user_verify_schema = extend_schema(
         ),
     },
     tags=["account"],
-    operation_id="health_check",
+    operation_id="user_verify",
 )

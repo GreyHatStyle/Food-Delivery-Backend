@@ -4,6 +4,8 @@ from ..serializer import OrderSerializer
 from restaurants.models import Order, Restaurant
 from utils import api_exception_handler
 
+from ..docs import get_single_user_orders_schema
+
 
 # class GetUserOrderItems(views.APIView):
 #     """
@@ -63,11 +65,11 @@ class GetUserSingleOrderAPI(RetrieveAPIView):
                 "message": f"Orders for user {self.request.user.username}, with this order id {self.kwargs['order_id']} doesn't exist"
             }
             response_.data = custom_response
+            response_.status_code = status.HTTP_403_FORBIDDEN
         
         return response_
     
-    
-    @api_exception_handler
+    # @api_exception_handler
     def retrieve(self, request, *args, **kwargs):
         
         instance = self.get_object()
@@ -81,3 +83,8 @@ class GetUserSingleOrderAPI(RetrieveAPIView):
             "order": serializer.data,
             "restaurant_address": restaurant.address,
         }, status=status.HTTP_200_OK)
+        
+        
+    @get_single_user_orders_schema
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)

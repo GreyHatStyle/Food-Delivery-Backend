@@ -10,7 +10,7 @@ from ..serializers import LoginValidation
 
 login_schema_for_docs = extend_schema(
     summary="User Login",
-    description="Authenticate user and return JWT tokens for access and refresh",
+    description="Authenticate user and return JWT tokens for access and refresh, with user's details to be stored in frontend storage",
     request=LoginValidation,
     auth=[],
     examples=[
@@ -35,6 +35,9 @@ login_schema_for_docs = extend_schema(
                             "id": serializers.CharField(),
                             "username": serializers.CharField(),
                             "email": serializers.EmailField(),
+                            "first_name": serializers.CharField(),
+                            "last_name": serializers.CharField(),
+                            "phone_no": serializers.CharField(),
                         },
                     ),
                     "tokens": inline_serializer(
@@ -57,6 +60,9 @@ login_schema_for_docs = extend_schema(
                             "id": "123e4567-e89b-12d3-a456-426614174000",
                             "username": "test_user",
                             "email": "test_user@email.com",
+                            "first_name": "Test",
+                            "last_name": "User",
+                            "phone_no": "+91999999999"
                         },
                         "tokens": {
                             "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",

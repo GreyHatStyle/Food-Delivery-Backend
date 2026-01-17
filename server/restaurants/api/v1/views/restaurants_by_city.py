@@ -7,6 +7,9 @@ from django.views.decorators.cache import cache_page
 
 from ..serializers import RestaurantSerializer
 from ..filters import GetAllRestaurantsFilter
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class GetCitiesNames(views.APIView):

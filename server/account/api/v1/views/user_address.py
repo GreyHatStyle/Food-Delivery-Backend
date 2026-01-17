@@ -2,10 +2,12 @@ from rest_framework import response, status, views, permissions
 from account.models import User, UserAddress
 from ..serializers import UserAddressSerializer
 from utils import api_exception_handler
+from ..docs import address_schema
 
 class UserAddressAPI(views.APIView):
-    permission_classes = (permissions.IsAuthenticated, )
+    permission_classes = [permissions.IsAuthenticated]
     
+    @address_schema
     @api_exception_handler
     def get(self, request):
         user: User = request.user

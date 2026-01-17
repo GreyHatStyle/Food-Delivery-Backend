@@ -1,5 +1,9 @@
 import sentry_sdk
 import os
+from sentry_sdk.integrations.django import DjangoIntegration
+import django.db.models.signals
+from django.core.exceptions import DisallowedHost
+
 
 sentry_sdk.init(
     dsn=os.environ.get("SENTRY_DSN"),
@@ -17,4 +21,20 @@ sentry_sdk.init(
     # Set profile_lifecycle to "trace" to automatically
     # run the profiler on when there is an active transaction
     profile_lifecycle="trace",
+    
+    ignore_errors=[DisallowedHost,], 
+    
+    integrations=[
+        DjangoIntegration(
+            transaction_style='url',
+            middleware_spans=True,
+            signals_spans=True,
+            signals_denylist=[
+                django.db.models.signals.pre_init,
+                django.db.models.signals.post_init,
+            ],
+            cache_spans=False,
+            http_methods_to_capture=("GET", "POST", "PATCH", "UPDATE",),
+        ),
+    ],
 )

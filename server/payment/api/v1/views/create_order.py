@@ -5,6 +5,7 @@ from pprint import pprint
 from utils import api_exception_handler
 
 from account.models import UserAddress
+from ..docs import create_order_schema_for_docs
 
 class CreateOrderFromCartAPI(views.APIView):
     """
@@ -19,6 +20,7 @@ class CreateOrderFromCartAPI(views.APIView):
     
     permission_classes = [permissions.IsAuthenticated]
     
+    @create_order_schema_for_docs
     @api_exception_handler
     def post(self, request):
         user = request.user

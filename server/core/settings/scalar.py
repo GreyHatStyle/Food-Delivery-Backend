@@ -1,6 +1,6 @@
 from .base import STATIC_URL
 
-SCALAR_THEME = "dark"
+SCALAR_THEME = "bluePlanet"
 
 SCALAR_SETTINGS = {"defaultHttpClient": {"targetKey": "shell", "clientKey": "curl"}}
 
