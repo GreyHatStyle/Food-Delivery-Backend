@@ -3,6 +3,7 @@ from restaurants.models import Cart, CartItems, Restaurant
 from ..serializers import CartSerializer, CartItemSerializer
 from utils import print_green, api_exception_handler
 from uuid import UUID
+from ..docs import cart_get_schema, cart_delete_schema, add_remove_cart_item_schema, delete_cart_item_schema
 
 
 class CartAPI(views.APIView):
@@ -11,6 +12,7 @@ class CartAPI(views.APIView):
     pagination_class = None
     # queryset = Cart.objects.prefetch_related("c_items")
     
+    @cart_get_schema
     @api_exception_handler
     def get(self, request):
         
@@ -37,6 +39,7 @@ class CartAPI(views.APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
             
          
+    @cart_delete_schema
     @api_exception_handler
     def delete(self, request):
         """
@@ -67,6 +70,7 @@ class CartItemAPI(viewsets.ModelViewSet):
     serializer_class = CartItemSerializer
     pagination_class = None
     queryset = CartItems.objects.all()
+    http_method_names = ['post', 'delete', 'head', 'options']
     
     def get_queryset(self):
         """
@@ -77,9 +81,22 @@ class CartItemAPI(viewsets.ModelViewSet):
         
         return CartItems.objects.filter(cart=cart)
     
+    def handle_exception(self, exc):
+        response_ = super().handle_exception(exc)
+        # print("Kwargs: ", self.kwargs)
+        if response_ is not None:
+            custom_response = {
+                "status": "error",
+                "message": f"Cart Item for user {self.request.user.username}, with this Id {self.kwargs['pk']} doesn't exist"
+            }
+            response_.data = custom_response
+            response_.status_code = status.HTTP_403_FORBIDDEN
+        
+        return response_
+    
     
     # Overriding this because it gives no response
-    @api_exception_handler
+    @delete_cart_item_schema
     def destroy(self, request, *args, **kwargs):
         cart_id = kwargs['pk']
         print_green(f"Request header: {cart_id}")
@@ -93,6 +110,7 @@ class CartItemAPI(viewsets.ModelViewSet):
         },status=status.HTTP_204_NO_CONTENT)
         
     
+    @add_remove_cart_item_schema
     @api_exception_handler
     def create(self, request, *args, **kwargs):
         """
@@ -130,23 +148,25 @@ class CartItemAPI(viewsets.ModelViewSet):
         
         return super().create(request, *args, **kwargs)
         
-    def list(self, request, *args, **kwargs):
-        return response.Response({
-            "status": "error",
-            "reason": "This request is removed and can't be fulfilled please use the Get Cart request only to get all cart items",
-        }, status=status.HTTP_400_BAD_REQUEST)
+    # REMOVING THIS FOR NOW BECAUSE I COULD HAVE ACHIEVED THIS USING 'http_method_names' ATTRIBUTE IN CLASS VARIABLE :)
+    
+    # def list(self, request, *args, **kwargs):
+    #     return response.Response({
+    #         "status": "error",
+    #         "reason": "This request is removed and can't be fulfilled please use the Get Cart request only to get all cart items",
+    #     }, status=status.HTTP_403_FORBIDDEN)
         
-    def update(self, request, *args, **kwargs):
-        return response.Response({
-            "status": "error",
-            "reason": "This request is removed and can't be fulfilled please use the Post request only to perform actions",
-        }, status=status.HTTP_400_BAD_REQUEST)
+    # def update(self, request, *args, **kwargs):
+    #     return response.Response({
+    #         "status": "error",
+    #         "reason": "This request is removed and can't be fulfilled please use the Post request only to perform actions",
+    #     }, status=status.HTTP_400_BAD_REQUEST)
         
     
-    def partial_update(self, request, *args, **kwargs):
-        return response.Response({
-            "status": "error",
-            "reason": "This request is removed and can't be fulfilled please use the Post request only to perform actions",
-        }, status=status.HTTP_400_BAD_REQUEST)
+    # def partial_update(self, request, *args, **kwargs):
+    #     return response.Response({
+    #         "status": "error",
+    #         "reason": "This request is removed and can't be fulfilled please use the Post request only to perform actions",
+    #     }, status=status.HTTP_400_BAD_REQUEST)
     
     

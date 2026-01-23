@@ -16,7 +16,7 @@ class CartItemSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     # Did this because I only needed restaurant_id to by pass serializer validation and arrive in "validation_data", not show in response (since it can't)
     restaurant_id = serializers.CharField(write_only=True) 
-    mode = serializers.CharField(write_only=True, required=False)
+    mode = serializers.ChoiceField(["add", "remove",],write_only=True, required=False)
     
     class Meta:
         model = CartItems

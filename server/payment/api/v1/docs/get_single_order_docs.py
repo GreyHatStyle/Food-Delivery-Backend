@@ -15,7 +15,7 @@ get_single_user_orders_schema = extend_schema(
             response=inline_serializer(
                 name="SuccessResponse",
                 fields={
-                    "status": serializers.ChoiceField(choices=["SUCCESS", "ERROR", "EXCEPTION"]),
+                    "status": serializers.ChoiceField(["success", "error", "exception",]),
                     "message": serializers.CharField(),
                     "order": inline_serializer(
                         name="OrderDetails",
@@ -100,7 +100,7 @@ get_single_user_orders_schema = extend_schema(
         ),
         403: OpenApiResponse(
             response=inline_serializer(
-                name="LoginError",
+                name="AccessingSomeoneElseError",
                 fields={
                     "status": serializers.CharField(),
                     "message": serializers.CharField(),

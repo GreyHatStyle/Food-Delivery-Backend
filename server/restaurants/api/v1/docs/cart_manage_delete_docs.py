@@ -6,49 +6,54 @@ from drf_spectacular.utils import (
 )
 from rest_framework import serializers
 
-user_verify_schema = extend_schema(
-    summary="User Verify",
-    description="To verify user by just providing its 'access token' in header",
-    request=inline_serializer(name="UserVerify", fields={}),
+cart_delete_schema = extend_schema(
+    summary="Empty Cart Details",
+    description="Basically Clear Cart, removes all cart information with its cart items details at once from backend.",
+    request=inline_serializer(name="CartRemove", fields={}),
     responses={
         200: OpenApiResponse(
             response=inline_serializer(
                 name="SuccessResponse",
                 fields={
-                    "status": serializers.CharField(),
-                    "message": serializers.CharField(),
+                    "status": serializers.ChoiceField(["success", "error", "exception",]),
+                    "message": serializers.CharField(), 
                 },
             ),
-            description="Correct Access token in header",
+            description="Cart is emptied successfully",
             examples=[
                 OpenApiExample(
                     "Success",
-                    value={"status": "success", "message": "test_user is given"},
+                    value={
+                        "status": "success",
+                        "message": "Cart with 15 of user test2 has been deleted"
+                    },
                 )
             ],
         ),
         401: OpenApiResponse(
             response=inline_serializer(
-                name="UnAuthorized",
+                name="LoginError",
                 fields={
+                    "status": serializers.CharField(),
                     "detail": serializers.CharField(),
+                    "message": serializers.CharField(),
                 },
             ),
-            description="Wrong or No access token in Header",
+            description="Authentication failed, when JWT token expires or sent wrong",
             examples=[
                 OpenApiExample(
-                    "Fail",
+                    "Authentication Failed",
                     value={
                         "status": "failed",
-                        "detail": "Given token not valid for any token type.",
-                        "message": "Token is either expired or not valid.",
+                        "detail": "Given token not valid for any token type",
+                        "message": "Token is either expired or not valid"
                     },
                 )
             ],
         ),
         500: OpenApiResponse(
             response=inline_serializer(
-                name="LoginError",
+                name="ServerError",
                 fields={
                     "status": serializers.CharField(),
                     "reason": serializers.CharField(),
@@ -68,6 +73,7 @@ user_verify_schema = extend_schema(
             ],
         ),
     },
-    tags=["account"],
-    operation_id="user_verify",
+    tags=["restaurants"],
+    operation_id="cart_manage_delete",
 )
+

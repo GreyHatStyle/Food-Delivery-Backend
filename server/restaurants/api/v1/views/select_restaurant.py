@@ -4,12 +4,14 @@ from ..serializers import MenuSerializer
 from django.db import connection
 from logging import getLogger
 from utils import api_exception_handler
+from ..docs import one_restaurant_schema
 
 
 class OpenRestaurantAPI(views.APIView):
 
     logger = getLogger("restaurants")
-
+    
+    @one_restaurant_schema
     @api_exception_handler
     def get(self, request, restaurant_id, category=None):
 

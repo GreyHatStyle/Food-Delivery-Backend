@@ -4,6 +4,7 @@ from restaurants.models import Restaurant
 from utils import api_exception_handler
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from ..docs import cities_get_schema, restaurants_filter_schema
 
 from ..serializers import RestaurantSerializer
 from ..filters import GetAllRestaurantsFilter
@@ -17,6 +18,7 @@ class GetCitiesNames(views.APIView):
     Will provide list of unique cities for frontend homepage.
     """
 
+    @cities_get_schema
     @api_exception_handler
     def get(self, request):
         city_queryset = Restaurant.objects.values("city").distinct()
@@ -50,7 +52,6 @@ class GetAllRestaurants(generics.ListAPIView):
     pagination_class = pagination.LimitOffsetPagination
 
     # Took help from: https://www.cdrf.co/3.16/rest_framework.generics/ListAPIView.html
-    @api_exception_handler
     @method_decorator(cache_page(60 * 15, key_prefix="restaurants_list"))
     def list(self, request, *args, **kwargs):
         """
@@ -82,3 +83,11 @@ class GetAllRestaurants(generics.ListAPIView):
             },
             status=status.HTTP_200_OK,
         )
+    
+    @restaurants_filter_schema
+    @api_exception_handler
+    def get(self, request, *args, **kwargs):
+        """
+        Did this to integrate scalar docs decorator with end point directly (logic in list() above)
+        """
+        return super().get(request, *args, **kwargs)

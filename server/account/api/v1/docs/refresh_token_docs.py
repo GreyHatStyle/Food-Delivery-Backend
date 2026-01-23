@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 refresh_token_schema = extend_schema(
     summary="Refresh JWT Token",
-    description="Get a new access and refresh token using previous refresh token, and the 'last refresh token', and then this 'last refresh' token gets blacklisted, so that it can not be used again",
+    description="Get a new access and refresh token using previous refresh token, and then this 'last refresh' token gets blacklisted, so that it can not be used again",
     
     request=inline_serializer(
         name="TokenRefreshRequest",

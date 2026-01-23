@@ -6,54 +6,65 @@ from drf_spectacular.utils import (
 )
 from rest_framework import serializers
 
-get_all_user_orders_schema = extend_schema(
-    summary="Get All User Orders",
-    description="To get all past Orders of User, sequenced from latest to first order. It supports Limit-Offset Pagination",
-    request=inline_serializer(name="UserAllOrders", fields={}),
+
+add_remove_cart_item_schema = extend_schema(
+    summary="Add Or Remove Cart Item",
+    description="This post request can be used to add cart item in cart for first time and any number of times.",
+    request=inline_serializer(
+        name="CartItemBodySer",
+        fields={
+            "restaurant_id": serializers.UUIDField(),
+            "item_uuid": serializers.UUIDField(),
+            "category": serializers.CharField(max_length=50),
+            "mode": serializers.ChoiceField([
+                ("add", "Adds the provided menu item's uuid to cart (by 1)", ), 
+                ("remove", "Removes the provided menu item's uuid from cart (by 1)", ), 
+            ]),
+        }
+    ),
+    examples=[
+        OpenApiExample(
+            "Add item example",
+            summary="Example Add item example body",
+            description="Use this body to add new item in cart",
+            value={
+                "restaurant_id": "6841313e-58bf-...",
+                "item_uuid": "4ee5da0c-3ee7-...",
+                "category": "Recommended",
+                "mode": "add"
+            },
+            request_only=True,  # This makes it only show for requests
+        ),
+    ],
     responses={
         200: OpenApiResponse(
             response=inline_serializer(
-                name="SuccessResponse",
+                name="AddItemResponse",
                 fields={
-                    "count": serializers.IntegerField(),
-                    "next": serializers.CharField(),
-                    "previous": serializers.CharField(),
-                    "results": serializers.ListField()  
+                    "id": serializers.IntegerField(),
+                    "item_uuid": serializers.UUIDField(),
+                    "category": serializers.CharField(max_length=50),
+                    "quantity": serializers.IntegerField(),
+                    "cart": serializers.IntegerField(),
                 },
             ),
-            description="If everything went right",
+            description='When Mode is "add", success response will be like this',
             examples=[
                 OpenApiExample(
                     "Success",
                     value={
-                        "id": 18,
-                        "restaurant_img": "Image stored URL of cloud",
-                        "restaurant_name": "Paprika Food Court",
-                        "item_list": [
-                            {
-                                "name": "Veg Fried Rice + Chilli Paneer Gravy",
-                                "quantity": 1,
-                                "price": 250.0,
-                                "veg": True
-                            }
-                        ],
-                        "service_charges": {
-                            "delivery_fee": 27.0,
-                            "gst_fee": 25.99
-                        },
-                        "created_at": "2026-01-17T15:55:15.777236+05:30",
-                        "status": "DEL",
-                        "delivery_address": "A-301, Great Society, Citynagar, Statepradesh, 282828.",
-                        "payment_type": "UPI",
-                        "card_name": None,
-                        "restaurant": "3637f7d6-a435-41bf-bdff-f3459004e690"
+                        "id": 221,
+                        "item_uuid": "4ee5da0c-3ee7-4825-94e6-1756ea4d1e30",
+                        "category": "Recommended",
+                        "quantity": 1,
+                        "cart": 15
                     },
                 )
             ],
         ),
         401: OpenApiResponse(
             response=inline_serializer(
-                name="LoginError",
+                name="AuthError",
                 fields={
                     "status": serializers.CharField(),
                     "detail": serializers.CharField(),
@@ -74,7 +85,7 @@ get_all_user_orders_schema = extend_schema(
         ),
         500: OpenApiResponse(
             response=inline_serializer(
-                name="ServerError",
+                name="Exception",
                 fields={
                     "status": serializers.CharField(),
                     "reason": serializers.CharField(),
@@ -94,6 +105,6 @@ get_all_user_orders_schema = extend_schema(
             ],
         ),
     },
-    tags=["payment"],
-    operation_id="get_all_user_orders",
+    tags=["restaurants"],
+    operation_id="add_remove_cart_item",
 )

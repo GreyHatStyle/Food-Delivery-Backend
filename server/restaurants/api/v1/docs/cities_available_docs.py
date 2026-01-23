@@ -6,49 +6,42 @@ from drf_spectacular.utils import (
 )
 from rest_framework import serializers
 
-user_verify_schema = extend_schema(
-    summary="User Verify",
-    description="To verify user by just providing its 'access token' in header",
-    request=inline_serializer(name="UserVerify", fields={}),
+cities_get_schema = extend_schema(
+    summary="Get City Names",
+    description="Names of all cities whose restaurant are registered in database.",
+    auth=[],
     responses={
         200: OpenApiResponse(
             response=inline_serializer(
                 name="SuccessResponse",
                 fields={
-                    "status": serializers.CharField(),
-                    "message": serializers.CharField(),
+                    "status": serializers.ChoiceField(["success", "exception",]),
+                    "cities": serializers.ListField(
+                        child=serializers.CharField()    
+                    ),
                 },
             ),
-            description="Correct Access token in header",
+            description="Displays all cities whose restaurant is available",
             examples=[
                 OpenApiExample(
                     "Success",
-                    value={"status": "success", "message": "test_user is given"},
-                )
-            ],
-        ),
-        401: OpenApiResponse(
-            response=inline_serializer(
-                name="UnAuthorized",
-                fields={
-                    "detail": serializers.CharField(),
-                },
-            ),
-            description="Wrong or No access token in Header",
-            examples=[
-                OpenApiExample(
-                    "Fail",
                     value={
-                        "status": "failed",
-                        "detail": "Given token not valid for any token type.",
-                        "message": "Token is either expired or not valid.",
+                        "status": "success",
+                        "cities": [
+                            "Bikaner",
+                            "Varanasi",
+                            "Noida-1",
+                            "Patna",
+                            "Faridabad",
+                            "Kanpur"
+                        ]
                     },
                 )
             ],
         ),
         500: OpenApiResponse(
             response=inline_serializer(
-                name="LoginError",
+                name="ServerError",
                 fields={
                     "status": serializers.CharField(),
                     "reason": serializers.CharField(),
@@ -68,6 +61,7 @@ user_verify_schema = extend_schema(
             ],
         ),
     },
-    tags=["account"],
-    operation_id="user_verify",
+    tags=["restaurants"],
+    operation_id="get_cities",
 )
+
