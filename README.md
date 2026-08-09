@@ -80,19 +80,19 @@ For serving this backend on the open web, the following services (some of them p
 <img width="1532" height="635" alt="image" src="https://github.com/user-attachments/assets/92894193-1d37-4fd9-8988-d57ba6fb41e5" />
 
 
-4. **Digital Ocean**:
-   - Digital Ocean is also a cloud infrastructure provider, which provided the **virtual machine** droplets for this project to host.
-   - It also played a great role in running a Python script to extract images of 2 lakh+ Menu items for 8 days.
+4. **Akamai**:
+   - Akamai is also a cloud infrastructure provider, which provided the **virtual machine** linode for this project to host.
+   - Before Digital Ocean, played a great role in running a Python script to extract images of 2 lakh+ Menu items for 8 days.
 
-<img width="1299" height="804" alt="image" src="https://github.com/user-attachments/assets/babc621d-2274-4fbe-8800-54ac51fb0d0b" />
+<img width="1064" height="652" alt="image" src="https://github.com/user-attachments/assets/edc3c612-2e2c-41d0-8536-3b66831d64d2" />
 
 
-5. **Namecheap**: Namecheap is used for getting the domain "manasbishtsecond.me" and its DNS management to forward the requests to Digital Ocean's droplet **IPv4 address**.
+5. **Namecheap**: Namecheap is used for getting the domain "mybackendserver11.online" and its DNS management to forward the requests to Akamai's droplet **IPv4 address**.
 
 ## About Deployment:
-1. **Apache2**: 
-    - Apache2 is used for deploying the Django server on **, which was later deployed to **port 443** for a secure HTTPS connection.
-    - It mainly takes the request and forwards it to Django using **Web Server Gateway Interface (WSGI)**, via the mod_wsgi library.
+1. **Nginx**: 
+    - Nginx is used for deploying the Django server on *port 80*, which was later deployed to **port 443** for a secure HTTPS connection.
+    - It mainly takes the request and forwards it to Django using **Web Server Gateway Interface (WSGI)**, via the gunicorn library.
 
 2. **CertBot**: 
     - It is a free, open-source software tool that automated the process of obtaining the **SSL/TLS certificates** for the domain.
@@ -101,7 +101,7 @@ For serving this backend on the open web, the following services (some of them p
 3. **Namecheap**: As mentioned above, the droplet's IPV4 address is provided to its DNS management system to forward the request to the droplet running this Django backend.
 
 ## API Endpoints Documentation
-This is the scalar style documentation link for this backend: https://manasbishtsecond.me/docs
+This is the scalar style documentation link for this backend: [https://manasbishtsecond.me/docs](https://mybackendserver11.online/docs/)
 
 ## Feedback
 If you have any feedback, please reach me at manasbisht1142004@gmail.com.
