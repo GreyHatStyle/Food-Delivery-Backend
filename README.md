@@ -101,7 +101,7 @@ For serving this backend on the open web, the following services (some of them p
 3. **Namecheap**: As mentioned above, the droplet's IPV4 address is provided to its DNS management system to forward the request to the droplet running this Django backend.
 
 ## API Endpoints Documentation
-This is the scalar style documentation link for this backend: [https://manasbishtsecond.me/docs](https://mybackendserver11.online/docs/)
+This is the scalar style documentation link for this backend: [https://mybackendserver11.online/docs/](https://mybackendserver11.online/docs/)
 
 ## Feedback
 If you have any feedback, please reach me at manasbisht1142004@gmail.com.
